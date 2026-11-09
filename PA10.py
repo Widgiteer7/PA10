@@ -1,29 +1,22 @@
 import os
 
-file_request = input("Enter file name: ")  # User input for file name
+file_request = input("Enter file name: ")                     # User input for file name
 
-for root, directories, files in os.walk("C:\\"):
-    if file_request in files:
-        file_path = os.path.join(root, file_request)  # Joins root and file name to get full path
-        print("File found")
-        with open(file_path, 'r') as file:           # Opens file
-            if sum(1 for line in file) <= 5:           # Checks for files with less than 5 lines
-                print(file.read())                       # Outputs entire file
+file_found = False
+
+for root, directories, files in os.walk("C:\\"):              # Searches computer for file
+    if file_request in files or file_request in directories:
+        file_path = os.path.join(root, file_request)            # Joins root and file name to get full path
+        print("\nFile found\n")
+        file_found = True
+        
+        with open(file_path, 'r') as file:                      # Opens file
+            file_lines = file.readlines()
+            if len(file_lines) <= 5:                              # Less than 5 Lines:
+                print("".join(file_lines))                          # Outputs entire file
             else:
-                file.seek(0)                           # Resets file pointer to the beginning
-                for i in range(5):                       # Loops through lines
-                    line = file.readline()                 # Reads line
-                    print(line)                            # Prints line
-    else:
-        print("File not found.")
-        break
+                for line in file_lines[:5]:                         # Less than 5 Lines:
+                    print(line, end="")                               # Outputs first 5 lines
 
-
-#with open(file_path, 'r') as file:           # Opens file
-#    if sum(1 for line in file) <= 5:           # Checks for files with less than 5 lines
-#        print(file.read())                       # Outputs entire file
-#    else:
-#        file.seek(0)                           # Resets file pointer to the beginning
-#        for i in range(5):                       # Loops through lines
-#            line = file.readline()                 # Reads line
-#            print(line)                            # Prints line
+if not file_found:                                            # For when the program cannot find the file
+    print("\nFile not found.")
